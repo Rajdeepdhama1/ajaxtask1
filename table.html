@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <style>
+          table,
+          td {
+              border: 2px solid black;
+          }
+      </style>
+  </head>
+<body>
+
+<div id="demo">
+<button type="button" onclick="loadDoc()">get the data</button>
+</div>
+
+<script>
+
+var arr=[];
+//ajax call is done to get the data
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      arr =this.responseText;
+     // console.log(arr);
+     //document.getElementById("demo").innerHTML =arr;
+     createt();
+    }
+  };
+  xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+  xhttp.send();
+
+  
+
+}
+        var keys;
+        var values;
+        //function to create the table from the data
+        function createt() {
+            arr = JSON.parse(arr)
+            keys = Object.keys(arr[1])
+            values = arr.map((element, index) => {
+                return Object.values(element)
+            })
+            var td = [];
+            var text = [];
+            var table = document.createElement('table');
+            table.border = "1";
+            var thead = document.createElement('thead');
+            table.appendChild(thead);
+            for (var col = 0; col < keys.length; col++) {
+                var temp = document.createTextNode(keys[col])
+                thead.appendChild(document.createElement("th")).
+                    appendChild(temp);
+            }
+            for (var col = 0; col < values.length; col++) {
+                var tr = document.createElement('tr');
+                for (let rows = 0; rows< keys.length; rows++) {
+                    td[rows] = document.createElement('td');
+                    text[rows] = document.createTextNode(values[col][rows]);
+                    td[rows].appendChild(text[rows]);
+                    tr.appendChild(td[rows])
+                }
+                table.appendChild(tr);
+            }
+            document.body.appendChild(table);
+        }
+        
+
+</script>
+
+</body>
+</html>
