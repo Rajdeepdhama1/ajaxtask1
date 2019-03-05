@@ -1,74 +1,252 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <style>
-          table,
-          td {
-              border: 2px solid black;
-          }
-      </style>
-  </head>
+
+<head>
+    <style>
+        table,
+        td {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
 <body>
 
-<div id="demo">
-<button type="button" onclick="loadDoc()">get the data</button>
-</div>
+    <div id="demo">
+        <button type="button" onclick="loadDoc()">get the data</button>
+    </div>
 
-<script>
+    <script>
+        var flag2 = true;
+        var arr_of_obj = [];
+        var arr_of_obj1;
+        //ajax call is done to get the data
+        function loadDoc() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    arr_of_obj1 = this.responseText;
+                    arr_of_obj = JSON.parse(arr_of_obj1);
+                    createTable();
+                }
+            };
+            xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
 
-var arr=[];
-//ajax call is done to get the data
-function loadDoc() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      arr =this.responseText;
-     // console.log(arr);
-     //document.getElementById("demo").innerHTML =arr;
-     createt();
-    }
-  };
-  xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
-  xhttp.send();
+            xhttp.send();
 
-  
+        }
 
-}
-        var keys;
-        var values;
-        //function to create the table from the data
-        function createt() {
-            arr = JSON.parse(arr)
-            keys = Object.keys(arr[1])
-            values = arr.map((element, index) => {
-                return Object.values(element)
-            })
-            var td = [];
-            var text = [];
-            var table = document.createElement('table');
-            table.border = "1";
-            var thead = document.createElement('thead');
-            table.appendChild(thead);
-            for (var col = 0; col < keys.length; col++) {
-                var temp = document.createTextNode(keys[col])
-                thead.appendChild(document.createElement("th")).
-                    appendChild(temp);
+        //function to create the table
+        function createTable() {
+
+            let previousTable = document.getElementById('dynamicTable');
+            if (!!previousTable) {
+                previousTable.remove();
             }
-            for (var col = 0; col < values.length; col++) {
+
+            var table = document.createElement('table');
+            table.setAttribute('id', 'dynamicTable');
+            var header = Object.keys(arr_of_obj[0]);
+            var tr = document.createElement('tr');
+            for (var i = 0; i < header.length; i++) {
+                var id = "h" + i;
+                var th = document.createElement('th');
+                th.innerHTML = header[i];
+                th.setAttribute('class', 'tableClass1');
+                th.setAttribute('id', id)
+                tr.appendChild(th);
+            }
+
+
+            table.appendChild(tr);
+            for (var i = 0; i < arr_of_obj.length; i++) {
                 var tr = document.createElement('tr');
-                for (let rows = 0; rows< keys.length; rows++) {
-                    td[rows] = document.createElement('td');
-                    text[rows] = document.createTextNode(values[col][rows]);
-                    td[rows].appendChild(text[rows]);
-                    tr.appendChild(td[rows])
+                for (var j = 0; j < header.length; j++) {
+                    var td = document.createElement('td');
+                    td.innerHTML = arr_of_obj[i][header[j]];
+                    td.setAttribute('class', 'tableClass');
+                    tr.appendChild(td);
                 }
                 table.appendChild(tr);
             }
             document.body.appendChild(table);
-        }
-        
 
-</script>
+          //function after click on event on userID
+            document.getElementById("h0").addEventListener('click', function () {
+
+                sorttext0();
+                console.log(arr_of_obj);
+                let temp = document.getElementsByTagName("table");
+                temp[0].remove();
+
+                createTable();
+            })
+            //function after click on event on id
+            document.getElementById("h1").addEventListener('click', function () {
+
+                sorttext1();
+                console.log(arr_of_obj);
+                let temp = document.getElementsByTagName("table");
+                temp[0].remove();
+
+                createTable();
+            })
+
+             //function after click on event on title
+            document.getElementById("h2").addEventListener('click', function () {
+
+                sorttext2();
+                console.log(arr_of_obj);
+                let temp = document.getElementsByTagName("table");
+                temp[0].remove();
+
+                createTable();
+            })
+ 
+            //function after click on event on body
+            document.getElementById("h3").addEventListener('click', function () {
+
+                sorttext3();
+                console.log(arr_of_obj);
+                let temp = document.getElementsByTagName("table");
+                temp[0].remove();
+
+                createTable();
+            })
+
+        }
+
+        //sorting function
+        function sorttext0() {
+
+
+            if (flag2) {
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.userId;
+                    var textB = b.userId;
+                    if (textA < textB)
+                        return -1
+                    if (textA > textB)
+                        return 1
+                    return 0;
+                })
+
+                flag2 = false;
+
+            } else {
+
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.userId;
+                    var textB = b.userId;
+                    if (textA < textB)
+                        return 1
+                    if (textA > textB)
+                        return -1
+                    return 0;
+                })
+
+                flag2 = true;
+                createTable();
+            }
+        }
+        function sorttext1() {
+
+
+            if (flag2) {
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.id;
+                    var textB = b.id;
+                    if (textA < textB)
+                        return -1
+                    if (textA > textB)
+                        return 1
+                    return 0;
+                })
+
+                flag2 = false;
+
+            } else {
+
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.id;
+                    var textB = b.id;
+                    if (textA < textB)
+                        return 1
+                    if (textA > textB)
+                        return -1
+                    return 0;
+                })
+
+                flag2 = true;
+                createTable();
+            }
+        }
+        function sorttext2() {
+
+
+            if (flag2) {
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.title;
+                    var textB = b.title;
+                    if (textA < textB)
+                        return -1
+                    if (textA > textB)
+                        return 1
+                    return 0;
+                })
+
+                flag2 = false;
+
+            } else {
+
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.title;
+                    var textB = b.title;
+                    if (textA < textB)
+                        return 1
+                    if (textA > textB)
+                        return -1
+                    return 0;
+                })
+
+                flag2 = true;
+                createTable();
+            }
+        }
+        function sorttext3() {
+
+
+            if (flag2) {
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.body;
+                    var textB = b.body;
+                    if (textA < textB)
+                        return -1
+                    if (textA > textB)
+                        return 1
+                    return 0;
+                })
+
+                flag2 = false;
+
+            } else {
+
+                arr_of_obj.sort(function (a, b) {
+                    var textA = a.body;
+                    var textB = b.body;
+                    if (textA < textB)
+                        return 1
+                    if (textA > textB)
+                        return -1
+                    return 0;
+                })
+
+                flag2 = true;
+                createTable();
+            }
+        }
+    </script>
 
 </body>
+
 </html>
